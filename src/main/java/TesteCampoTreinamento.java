@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -29,7 +30,7 @@ public class TesteCampoTreinamento {
 	
 	@After
 	public void finalizar() {
-		driver.quit();
+//		driver.quit();
 	}
 	
 	@Test
@@ -113,7 +114,6 @@ public class TesteCampoTreinamento {
 	
 	@Test
 	public void deveBuscarTextoNaPagina() {
-		
 		//Pega o coteúdo do body e verificar se tem essa string dentro
 		Assert.assertTrue(driver.findElement(By.tagName("body")).getText().contains("Campo de Treinamento"));
 		
@@ -130,6 +130,21 @@ public class TesteCampoTreinamento {
 		Assert.assertEquals("Wagner", dsl.obterValorCampo("elementosForm:nome"));
 		dsl.escreve("elementosForm:nome", "Julio");
 		Assert.assertEquals("Julio", dsl.obterValorCampo("elementosForm:nome"));
+	}
+	
+	public void testJavascript() {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+//		js.executeScript("alert('Testando js via selenium')");
+		js.executeScript("document.getElementById('elementosForm:nome').value = 'Escrito via js'");
+		js.executeScript("document.getElementById('elementosForm:sobrenome').type = 'radio'");
+		
+		WebElement element = driver.findElement(By.id("elementosForm:nome"));
+		js.executeScript("arguments[0].style.border = arguments[1]", element, "solid 4px red");
+	}
+	
+	@Test
+	public void deveClicarBotaoTabela() {
+		dsl.clicarBotaoTabela("Nome", "Maria", "Botao", "elementosForm:tableUsuarios");
 	}
 	
 		
