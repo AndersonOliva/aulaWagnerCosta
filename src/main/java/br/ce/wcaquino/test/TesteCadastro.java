@@ -1,28 +1,28 @@
+package br.ce.wcaquino.test;
+import static br.ce.wcaquino.core.DriverFactory.getDriver;
+import static br.ce.wcaquino.core.DriverFactory.killDriver;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-public class TesteCadastro {
+import br.ce.wcaquino.core.BaseTest;
+import br.ce.wcaquino.page.CampoTreinamentoPage;
+
+public class TesteCadastro extends BaseTest {
 	
-	private WebDriver driver;
 	private CampoTreinamentoPage page;
 	
 	@Before
 	public void inicializa() {
-		System.setProperty("webdriver.chrome.driver", "I:\\portalr7\\QA\\chromedriver.exe");
-		driver = new ChromeDriver();
-		driver.manage().window().setSize(new Dimension(1200, 765));
-		driver.get("file://C:/Users/aoliva/Desktop/AUTOMA%C3%87%C3%83O/Cursos/componentes.html");
-		page = new CampoTreinamentoPage(driver);
+		getDriver().get("file://C:/Users/aoliva/Desktop/AUTOMA%C3%87%C3%83O/Cursos/componentes.html");
+		page = new CampoTreinamentoPage();
 	}
 	
 	@After
 	public void finalizar() {
-		driver.quit();
+		killDriver();
 	}
 	
 	@Test

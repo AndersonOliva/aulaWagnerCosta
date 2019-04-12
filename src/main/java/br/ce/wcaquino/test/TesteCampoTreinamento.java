@@ -1,3 +1,7 @@
+package br.ce.wcaquino.test;
+import static br.ce.wcaquino.core.DriverFactory.getDriver;
+import static br.ce.wcaquino.core.DriverFactory.killDriver;
+
 import java.util.List;
 
 import org.junit.After;
@@ -6,31 +10,25 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
+
+import br.ce.wcaquino.core.DSL;
 
 public class TesteCampoTreinamento {
 	
-	private WebDriver driver;
 	private DSL dsl;
-	
 	
 	@Before
 	public void inicializa() {
-		System.setProperty("webdriver.chrome.driver", "I:\\portalr7\\QA\\chromedriver.exe");
-		driver = new ChromeDriver();
-		driver.manage().window().setSize(new Dimension(1200, 765));
-		driver.get("file://C:/Users/aoliva/Desktop/AUTOMA%C3%87%C3%83O/Cursos/componentes.html");
-		dsl = new DSL(driver);
+		getDriver().get("file://C:/Users/aoliva/Desktop/AUTOMA%C3%87%C3%83O/Cursos/componentes.html");
+		dsl = new DSL();
 	}
 	
 	@After
 	public void finalizar() {
-//		driver.quit();
+		killDriver();
 	}
 	
 	@Test
@@ -59,7 +57,7 @@ public class TesteCampoTreinamento {
 	
 	@Test
 	public void deveVerificarValoresCombo() {
-		WebElement element = driver.findElement(By.id("elementosForm:escolaridade"));
+		WebElement element = getDriver().findElement(By.id("elementosForm:escolaridade"));
 		Select combo = new Select(element);
 		List<WebElement> options = combo.getOptions();
 		
@@ -83,10 +81,9 @@ public class TesteCampoTreinamento {
 		dsl.selecionarCombo("elementosForm:esportes", "Corrida");
 		dsl.selecionarCombo("elementosForm:esportes", "O que eh esportes?");
 		
-		WebElement element = driver.findElement(By.id("elementosForm:escolaridade"));
+		WebElement element = getDriver().findElement(By.id("elementosForm:escolaridade"));
 		Select combo = new Select(element);
 
-		
 		List<WebElement> allSelecteOptions = combo.getAllSelectedOptions();
 		Assert.assertEquals(3, allSelecteOptions.size());
 		//Desmarcar o valor selecionado
@@ -97,7 +94,7 @@ public class TesteCampoTreinamento {
 	
 	@Test
 	public void deveInteragirComBotoes() {
-		WebElement botao = driver.findElement(By.id("buttonSimple"));
+		WebElement botao = getDriver().findElement(By.id("buttonSimple"));
 		botao.click();
 		
 		Assert.assertEquals("Obrigado!", botao.getAttribute("Value"));
@@ -107,21 +104,21 @@ public class TesteCampoTreinamento {
 	@Ignore
 	//Teste sem validação de assert - Ignore essa execução
 	public void deveInteragirComLinks() {
-		driver.findElement(By.linkText("Voltar")).click();
+		getDriver().findElement(By.linkText("Voltar")).click();
 		
-		Assert.assertEquals("Voltou!", driver.findElement(By.id("resultado")).getText());
+		Assert.assertEquals("Voltou!", getDriver().findElement(By.id("resultado")).getText());
 	}
 	
 	@Test
 	public void deveBuscarTextoNaPagina() {
 		//Pega o coteúdo do body e verificar se tem essa string dentro
-		Assert.assertTrue(driver.findElement(By.tagName("body")).getText().contains("Campo de Treinamento"));
+		Assert.assertTrue(getDriver().findElement(By.tagName("body")).getText().contains("Campo de Treinamento"));
 		
 		//Pega o coteúdo do h3 e verificar se tem essa string dentro
-		Assert.assertEquals("Campo de Treinamento", driver.findElement(By.tagName("h3")).getText());
+		Assert.assertEquals("Campo de Treinamento", getDriver().findElement(By.tagName("h3")).getText());
 
 		//Pega o coteúdo da classe
-		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", driver.findElement(By.className("facilAchar")).getText());
+		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", getDriver().findElement(By.className("facilAchar")).getText());
 	}
 	
 	@Test
@@ -133,12 +130,12 @@ public class TesteCampoTreinamento {
 	}
 	
 	public void testJavascript() {
-		JavascriptExecutor js = (JavascriptExecutor) driver;
+		JavascriptExecutor js = (JavascriptExecutor) getDriver();
 //		js.executeScript("alert('Testando js via selenium')");
 		js.executeScript("document.getElementById('elementosForm:nome').value = 'Escrito via js'");
 		js.executeScript("document.getElementById('elementosForm:sobrenome').type = 'radio'");
 		
-		WebElement element = driver.findElement(By.id("elementosForm:nome"));
+		WebElement element = getDriver().findElement(By.id("elementosForm:nome"));
 		js.executeScript("arguments[0].style.border = arguments[1]", element, "solid 4px red");
 	}
 	
